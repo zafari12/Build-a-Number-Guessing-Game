@@ -19,3 +19,7 @@ else
 
    echo -e "Welcome back, $USER_NAME! You have played $GAMES_PLAYED games, and your best game took $BEST_GAME guesses.\n"
 fi
+
+
+SECRET_NUMBER=$(( RANDOM % 1000 + 1 ))
+GUESS_NUMBER=0
