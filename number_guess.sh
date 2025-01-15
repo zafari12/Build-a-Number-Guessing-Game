@@ -23,3 +23,43 @@ fi
 
 SECRET_NUMBER=$(( RANDOM % 1000 + 1 ))
 GUESS_NUMBER=0
+
+echo -e "\nGuess the secret number between 1 and 1000:"
+read USER_GUESS
+
+until [[ $USER_GUESS -eq $SECRET_NUMBER ]]
+do
+
+  if [[ ! $USER_GUESS =~ ^[0-9]+$ ]]
+    then
+      # request valid guess
+      echo -e"\nThat is not an integer, guess again:"
+      read USER_GUESS
+      # update guess count
+      ((GUESS_NUMBER++))
+
+    else
+       if [[ $USER_GUESS -lt $SECRET_NUMBER ]]
+       then
+          echo "It's higher than that, guess again:"
+          read USER_GUESS
+
+          ((GUESS_NUMBER++))
+        else
+          echo "It's lower than that, guess again:"
+          read USER_GUESS
+
+          ((GUESS_NUMBER++))
+       fi
+  fi
+    read USER_GUESS
+    ((GUESS_NUMBER++))
+done
+
+((GUESS_NUMBER++))
+
+USER_ID=$($PSQL "SELECT user_id FROM users WHERE username='$USER_NAME';")
+INSERT_RESULTS=$($PSQL "INSERT INTO games(user_id, secret_number, guesses) VALUES($USER_ID, $SECRET_NUMBER, $GUESS_NUMBER);")
+
+# Congratulate the user
+echo -e "You guessed it in $GUESS_NUMBER tries. The secret number was $SECRET_NUMBER. Nice job!"
